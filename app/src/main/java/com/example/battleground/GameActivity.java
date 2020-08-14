@@ -3,19 +3,27 @@ package com.example.battleground;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.view.ContextMenu;
 import android.view.MotionEvent;
-import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
+import com.example.battleground.Objects.Enemy;
+import com.example.battleground.Objects.GameBeing;
+import com.example.battleground.Objects.GameObject;
+import com.example.battleground.Objects.Player;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 public class GameActivity extends SurfaceView implements SurfaceHolder.Callback {
     private final Joystick joystick;
     private Player player;
+//    private Enemy enemy;
+    private List<Enemy> enemyList;
     private GameLoop gameLoop;
     private SurfaceHolder surfaceHolder;
 
@@ -29,8 +37,12 @@ public class GameActivity extends SurfaceView implements SurfaceHolder.Callback 
 
         gameLoop = new GameLoop(this, surfaceHolder);
 
-        player = new Player(getContext(), 150, 300, 20);
+        enemyList = new ArrayList<Enemy>();
+
+
         joystick = new Joystick(getContext(), 300, 300, 40, 70);
+        player = new Player(getContext(), joystick, 150, 300, 20);
+//        enemy = new Enemy(getContext(), player, 250, 250, 20);
         setFocusable(true);
     }
 
@@ -56,6 +68,10 @@ public class GameActivity extends SurfaceView implements SurfaceHolder.Callback 
         drawFPS(canvas);
         player.draw(canvas);
         joystick.draw(canvas);
+        for(Enemy e : enemyList){
+            e.draw(canvas);
+        }
+
     }
 
     public void drawUPS(Canvas canvas){
@@ -78,7 +94,19 @@ public class GameActivity extends SurfaceView implements SurfaceHolder.Callback 
 
     public void update() {
         joystick.update();
-        player.update(joystick);
+        player.update();
+        if(Enemy.isSpawn()){
+            enemyList.add(new Enemy(getContext(), player));
+        }
+        for(Enemy e : enemyList){
+            e.update();
+        }
+        Iterator<Enemy> enemyIterator = enemyList.iterator();
+        while(enemyIterator.hasNext()){
+            if(GameObject.isColide(enemyIterator.next(), player)){
+                enemyIterator.remove();
+            }
+        }
     }
 
     @Override
