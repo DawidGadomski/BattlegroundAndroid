@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class GameOver extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private TextView tvPlay;
     private TextView tvHighscore;

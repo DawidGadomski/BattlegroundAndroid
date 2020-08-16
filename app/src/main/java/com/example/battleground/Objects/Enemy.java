@@ -1,6 +1,8 @@
 package com.example.battleground.Objects;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 
 import androidx.core.content.ContextCompat;
 
@@ -8,12 +10,14 @@ import com.example.battleground.GameLoop;
 import com.example.battleground.R;
 
 public class Enemy extends GameBeing{
-    private static final double SPEED_PER_SECOND = 300.0; // speed pixel per second
+    private static final double SPEED_PER_SECOND = 100.0; // speed pixel per second
     private static final double MAX_SPEED = SPEED_PER_SECOND / GameLoop.MAX_UPS;
     private static final double SPAWNS_PER_MIN = 20;
     private static final double SPAWNS_PER_SEC = SPAWNS_PER_MIN/60.0;
     private static final double ENEMY_SPAWN = GameLoop.MAX_UPS/SPAWNS_PER_SEC;
     private static double nextSpawn;
+
+    private HealthBar healthBar;
 
     private Player player;
 
@@ -21,6 +25,14 @@ public class Enemy extends GameBeing{
         super(context, ContextCompat.getColor(context, R.color.enemy), posX, posY, radius);
         this.player = player;
         nextSpawn = ENEMY_SPAWN;
+        this.DMG = 10;
+        this.health = 30;
+        this.maxHealth = 30;
+
+        healthBar = new HealthBar(context, this);
+
+        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable
+        .zombie);
     }
 
     public Enemy(Context context, Player player) {
@@ -28,6 +40,16 @@ public class Enemy extends GameBeing{
                 Math.random()*1000, Math.random()*1000, 20);
         this.player = player;
         nextSpawn = ENEMY_SPAWN;
+        this.DMG = 10;
+        this.health = 30;
+        this.maxHealth = 30;
+
+        healthBar = new HealthBar(context, player);
+
+        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable
+                .zombie);
+        deadBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable
+                .splat_green);
 
     }
 
@@ -39,6 +61,12 @@ public class Enemy extends GameBeing{
         nextSpawn--;
 
         return false;
+    }
+
+    public void draw(Canvas canvas){
+        super.draw(canvas);
+        canvas.drawBitmap(bitmap, (float)posX, (float)posY, paint);
+        healthBar.draw(canvas);
     }
 
     @Override
@@ -61,7 +89,12 @@ public class Enemy extends GameBeing{
 
         posX += velX;
         posY +=velY;
+
+        if(health <= 0){
+            bitmap = deadBitmap;
+        }
     }
+
 
 
 }

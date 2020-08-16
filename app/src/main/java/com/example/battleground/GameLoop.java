@@ -7,7 +7,7 @@ public class GameLoop extends Thread{
     public static final double MAX_UPS = 60.0;
     private static final double UPS_PERIOD = 1E+3/MAX_UPS;
 
-    private GameActivity gameActivity;
+    private Game game;
     private boolean isRunning;
     private Canvas canvas;
     private SurfaceHolder surfaceHolder;
@@ -23,8 +23,8 @@ public class GameLoop extends Thread{
     private double UPS;
     private double FPS;
 
-    public GameLoop(GameActivity gameActivity, SurfaceHolder surfaceHolder) {
-        this.gameActivity = gameActivity;
+    public GameLoop(Game game, SurfaceHolder surfaceHolder) {
+        this.game = game;
         this.surfaceHolder = surfaceHolder;
     }
 
@@ -54,10 +54,10 @@ public class GameLoop extends Thread{
                 canvas = surfaceHolder.lockCanvas();
 
                 synchronized (surfaceHolder){ //zapobiega wielokrotnemu użyciu update i draw
-                    gameActivity.update();
+                    game.update();
                     updates++;
 
-                    gameActivity.draw(canvas);
+                    game.draw(canvas);
                 }
             }catch (IllegalArgumentException e){
                 e.printStackTrace();
@@ -83,7 +83,7 @@ public class GameLoop extends Thread{
                 }
             }
             while (sleepTime < 0 && updates < MAX_UPS - 1){
-                gameActivity.update();
+                game.update();
                 updates++;
                 elapsedTime = System.currentTimeMillis() - startTime;
                 sleepTime = (long) (updates*UPS_PERIOD - elapsedTime);
@@ -105,5 +105,17 @@ public class GameLoop extends Thread{
         }
     }
 
+    public void stopLoop(){
+        isRunning = false;
+        try {
+            join();
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void resumeLoop(){
+        isRunning = true;
+    }
 
 }
