@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
 
 import androidx.core.content.ContextCompat;
 
@@ -39,11 +38,15 @@ public class Player extends GameBeing{
         healthBar = new HealthBar(context, this);
 
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player);
-
         deadBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.splat_red);
+
         matrix = new Matrix();
-        matrix.setRotate((float)angle, (float)bitmap.getWidth()/2, (float)bitmap.getHeight()/2);
-        rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        matrix.setRotate((float)angle,
+                (float)bitmap.getWidth()/2,
+                (float)bitmap.getHeight()/2);
+        rotatedBitmap = Bitmap.createBitmap(bitmap,
+                0, 0, bitmap.getWidth(),
+                bitmap.getHeight(), matrix, true);
 
 //        lightBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.light_350_med);
 //        scaledLightBitmap = Bitmap.createScaledBitmap(lightBitmap, bitmap.getWidth(), bitmap.getHeight(), true);
@@ -54,10 +57,12 @@ public class Player extends GameBeing{
     public void draw(Canvas canvas, GameDisplay gameDisplay){
         super.draw(canvas, gameDisplay);
 
-        canvas.drawBitmap(rotatedBitmap, (float)gameDisplay.getCordX(posX), (float)gameDisplay.getCordY(posY), null);
+        canvas.drawBitmap(rotatedBitmap,
+                (float)gameDisplay.getCordX(posX - bitmap.getWidth()/2f),
+                (float)gameDisplay.getCordY(posY - bitmap.getHeight()/2f), null);
 //        canvas.drawBitmap(scaledLightBitmap, (float)gameDisplay.getCordX(posX), (float)gameDisplay.getCordY(posY), null);
+
         healthBar.draw(canvas, gameDisplay);
-        System.out.println("X: " + posX + " Y: " + posY);
     }
 
     public void update(int dispWidth, int dispHeight) {
@@ -89,17 +94,16 @@ public class Player extends GameBeing{
             directY = velY / dist;
 
             angle = Math.atan2(directY, directX) * (180/Math.PI);
-            matrix.setRotate((float)angle, (float)bitmap.getWidth()/2, (float)bitmap.getHeight()/2);
-            rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-
+            matrix.setRotate((float)angle,
+                    (float)bitmap.getWidth()/2, (float)bitmap.getHeight()/2);
+            rotatedBitmap = Bitmap.createBitmap(bitmap,
+                    0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
         }
 
         if(health <= 0){
             bitmap = deadBitmap;
         }
     }
-
-
 
     public void getPoints(){
         this.score += 10;

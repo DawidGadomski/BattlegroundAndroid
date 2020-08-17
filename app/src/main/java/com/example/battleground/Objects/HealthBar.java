@@ -21,6 +21,9 @@ public class HealthBar {
     private Paint healthPaint;
     private int healthColor;
 
+    float leftBorder, rightBorder, topBorder, bottomBorder;
+    float leftHealthBorder, rightHealthBorder, topHealthBorder, bottomHealthBorder;
+    float healthWidth, healthHeight;
 
     public HealthBar(Context context, GameBeing gameBeing){
         this.gameBeing = gameBeing;
@@ -28,6 +31,7 @@ public class HealthBar {
         this.width = 50;
         this.height = 10;
         this.margin = 2;
+
         this.borderPaint = new Paint();
         this.healthPaint = new Paint();
         this.borderColor = ContextCompat.getColor(context, R.color.healthBorderColor);
@@ -35,7 +39,6 @@ public class HealthBar {
 
         this.borderPaint.setColor(borderColor);
         this.healthPaint.setColor(healthColor);
-
     }
 
     public void draw(Canvas canvas, GameDisplay gameDisplay) {
@@ -44,14 +47,11 @@ public class HealthBar {
         float dist = 30;
         float healthPct = (float) gameBeing.getHealth()/gameBeing.getMaxHealth();
 
-        float leftBorder, rightBorder, topBorder, bottomBorder;
-        leftBorder = x - width/2;
-        rightBorder = x + width/2;
+        leftBorder = x - width/2f;
+        rightBorder = x + width/2f;
         bottomBorder = y - dist;
         topBorder = bottomBorder - height;
 
-        float leftHealthBorder, rightHealthBorder, topHealthBorder, bottomHealthBorder;
-        float healthWidth, healthHeight;
         healthWidth = width - 2*margin;
         healthHeight = height - 2*margin;
 
@@ -60,8 +60,15 @@ public class HealthBar {
         bottomHealthBorder = bottomBorder - margin;
         topHealthBorder = bottomHealthBorder - healthHeight;
 
-        canvas.drawRect((float)gameDisplay.getCordX(leftBorder), (float)gameDisplay.getCordY(topBorder), (float)gameDisplay.getCordX(rightBorder), (float)gameDisplay.getCordY(bottomBorder), borderPaint);
+        canvas.drawRect((float)gameDisplay.getCordX(leftBorder),
+                (float)gameDisplay.getCordY(topBorder),
+                (float)gameDisplay.getCordX(rightBorder),
+                (float)gameDisplay.getCordY(bottomBorder), borderPaint);
 
-        canvas.drawRect((float)gameDisplay.getCordX(leftHealthBorder),(float)gameDisplay.getCordY(topHealthBorder), (float)gameDisplay.getCordX(rightHealthBorder), (float)gameDisplay.getCordY(bottomHealthBorder), healthPaint);
+        canvas.drawRect((float)gameDisplay.getCordX(leftHealthBorder),
+                (float)gameDisplay.getCordY(topHealthBorder),
+                (float)gameDisplay.getCordX(rightHealthBorder),
+                (float)gameDisplay.getCordY(bottomHealthBorder),
+                healthPaint);
     }
 }

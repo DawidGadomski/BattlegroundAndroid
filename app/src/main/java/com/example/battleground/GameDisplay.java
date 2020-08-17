@@ -5,7 +5,9 @@ import com.example.battleground.Objects.GameObject;
 public class GameDisplay {
     private int width;
     private int height;
+
     private GameObject gameObject;
+
     private double dispCenterX;
     private double dispCenterY;
     private double offsetX;
@@ -33,17 +35,10 @@ public class GameDisplay {
     }
 
     public double getCordX(double x){
-//        if(x < 0){
-//            return 0;
-//        }
-
         return x +offsetX;
     }
 
     public double getCordY(double y){
-//        if(y<0){
-//            return 0;
-//        }
         return y + offsetY;
     }
 }

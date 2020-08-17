@@ -29,24 +29,11 @@ public class GameBeing extends GameObject {
         this.angle = 0;
     }
 
+    @Override
+    public void draw(Canvas canvas, GameDisplay gameDisplay) { }
 
     @Override
-    public void draw(Canvas canvas, GameDisplay gameDisplay) {
-
-    }
-
-    @Override
-    public void update() {
-
-    }
-
-    public int getHealth() {
-        return health;
-    }
-
-    public int getMaxHealth() {
-        return maxHealth;
-    }
+    public void update() { }
 
     public void takeDMG(int DMG) {
         this.health -= DMG;
@@ -57,6 +44,14 @@ public class GameBeing extends GameObject {
 
     public void setMaxHealth(int maxHealth) {
         this.maxHealth = maxHealth;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public int getMaxHealth() {
+        return maxHealth;
     }
 
     public int getDMG() {

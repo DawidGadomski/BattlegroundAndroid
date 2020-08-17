@@ -47,8 +47,6 @@ public class Joystick {
     public void draw(Canvas canvas) {
         canvas.drawCircle(boundPosX, boundPosY, boundRadius, boundsPaint);
         canvas.drawCircle(posX, posY, joystickRadius, joystickPaint);
-
-
     }
 
     public void update() {
@@ -65,9 +63,7 @@ public class Joystick {
         return distanceFromCenter < boundRadius;
     }
 
-
     public void setActuator(double x, double y) {
-
         double dist = distanceFromCenter = Math.sqrt(Math.pow(x - boundPosX, 2) + Math.pow(y - boundPosY, 2));
 
         if(dist < boundRadius) {
@@ -100,8 +96,4 @@ public class Joystick {
         return actuatorY;
     }
 
-    public void moveJoystick(int posX, int posY){
-        this.posX = posX;
-        this.posY = posY;
-    }
 }

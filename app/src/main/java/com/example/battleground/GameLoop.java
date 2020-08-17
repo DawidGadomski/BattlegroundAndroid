@@ -1,12 +1,8 @@
 package com.example.battleground;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Canvas;
-import android.os.Bundle;
 import android.view.SurfaceHolder;
-
-import static android.content.Context.MODE_PRIVATE;
 
 public class GameLoop extends Thread{
     public static final double MAX_UPS = 60.0;
@@ -15,6 +11,7 @@ public class GameLoop extends Thread{
     private Game game;
     private boolean isRunning;
     private boolean isOver;
+
     private Canvas canvas;
     private SurfaceHolder surfaceHolder;
 
@@ -29,21 +26,9 @@ public class GameLoop extends Thread{
     private double UPS;
     private double FPS;
 
-    private SharedPreferences pref;
-    private SharedPreferences.Editor editor;
-
     public GameLoop(Game game, SurfaceHolder surfaceHolder) {
         this.game = game;
         this.surfaceHolder = surfaceHolder;
-
-    }
-
-    public double getFPS() {
-        return FPS;
-    }
-
-    public double getUPS() {
-        return UPS;
     }
 
     public void startLoop() {
@@ -83,7 +68,7 @@ public class GameLoop extends Thread{
                 }
 
             }
-
+//          Stops game to not exceed UPS
             elapsedTime = System.currentTimeMillis() - startTime;
             sleepTime = (long) (updates*UPS_PERIOD - elapsedTime);
             if(sleepTime > 0){
@@ -93,14 +78,13 @@ public class GameLoop extends Thread{
                     e.printStackTrace();
                 }
             }
+//          Skip frames to keep up UPS
             while (sleepTime < 0 && updates < MAX_UPS - 1){
                 game.update();
                 updates++;
                 elapsedTime = System.currentTimeMillis() - startTime;
                 sleepTime = (long) (updates*UPS_PERIOD - elapsedTime);
             }
-
-
 
 //          Calculations UPS and FPS
             elapsedTime = System.currentTimeMillis() - startTime;
@@ -136,5 +120,13 @@ public class GameLoop extends Thread{
 
     public void setIsRunning(boolean running) {
         isRunning = running;
+    }
+
+    public double getFPS() {
+        return FPS;
+    }
+
+    public double getUPS() {
+        return UPS;
     }
 }

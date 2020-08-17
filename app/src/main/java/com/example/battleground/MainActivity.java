@@ -18,7 +18,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         setContentView(R.layout.activity_game_start);
 
         tvPlay = findViewById(R.id.tvPlay);
@@ -34,6 +33,5 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("game", MODE_PRIVATE);
         highscore = sharedPreferences.getInt("highscore", MODE_PRIVATE);
         tvHighscore.setText("HighScore: " + highscore);
-
     }
 }

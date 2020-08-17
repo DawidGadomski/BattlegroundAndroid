@@ -23,6 +23,7 @@ public class Background {
     public int getWidth(){
         return bitmap.getWidth();
     }
+
     public int getHeight(){
         return bitmap.getHeight();
     }

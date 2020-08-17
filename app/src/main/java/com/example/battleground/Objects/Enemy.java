@@ -20,68 +20,59 @@ public class Enemy extends GameBeing{
     private static final double ENEMY_SPAWN = GameLoop.MAX_UPS/SPAWNS_PER_SEC;
     private static double nextSpawn;
 
-    private HealthBar healthBar;
-
+//    private HealthBar healthBar;
     private Player player;
 
     public Enemy(Context context, Player player, double posX, double posY, double radius) {
         super(context, ContextCompat.getColor(context, R.color.enemy), posX, posY, radius);
+
         this.player = player;
         nextSpawn = ENEMY_SPAWN;
         this.DMG = 10;
         this.health = 30;
         this.maxHealth = 30;
 
-        healthBar = new HealthBar(context, this);
+//        healthBar = new HealthBar(context, this);
 
-        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable
-        .zombie);
+        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.zombie);
 
         matrix = new Matrix();
-        matrix.setRotate((float)angle, (float)bitmap.getWidth()/2, (float)bitmap.getHeight()/2);
-        rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        matrix.setRotate((float)angle, (float)bitmap.getWidth()/2,
+                (float)bitmap.getHeight()/2);
+        rotatedBitmap = Bitmap.createBitmap(
+                bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
     public Enemy(Context context, Player player) {
         super(context, ContextCompat.getColor(context, R.color.enemy),
-                Math.random()*1000, Math.random()*1000, 20);
+                Math.random()*2000, Math.random()*2000, 20);
+
         this.player = player;
         nextSpawn = ENEMY_SPAWN;
         this.DMG = 10;
         this.health = 30;
         this.maxHealth = 30;
 
-        healthBar = new HealthBar(context, player);
+//        healthBar = new HealthBar(context, player);
 
-        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable
-                .zombie);
-        deadBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable
-                .splat_green);
+        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.zombie);
+//        deadBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.splat_green);
 
         matrix = new Matrix();
-        matrix.setRotate((float)angle, (float)bitmap.getWidth()/2, (float)bitmap.getHeight()/2);
-        rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        matrix.setRotate((float)angle,
+                (float)bitmap.getWidth()/2, (float)bitmap.getHeight()/2);
+        rotatedBitmap = Bitmap.createBitmap(
+                bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
 
     }
-
-    public static boolean isSpawn() {
-        if(nextSpawn <= 0){
-            nextSpawn += ENEMY_SPAWN;
-            return true;
-        }
-        nextSpawn--;
-
-        return false;
-    }
-
-
 
     public void draw(Canvas canvas, GameDisplay gameDisplay){
         super.draw(canvas, gameDisplay);
-        canvas.drawBitmap(rotatedBitmap, (float)gameDisplay.getCordX(posX), (float)gameDisplay.getCordY(posY), paint);
-        healthBar.draw(canvas, gameDisplay);
-    }
 
+        canvas.drawBitmap(rotatedBitmap, (float)gameDisplay.getCordX(posX - bitmap.getWidth()/2f),
+                (float)gameDisplay.getCordY(posY - bitmap.getHeight()/2f), paint);
+//        healthBar.draw(canvas, gameDisplay);
+    }
 
     @Override
     public void update() {
@@ -113,6 +104,12 @@ public class Enemy extends GameBeing{
         }
     }
 
-
-
+    public static boolean isSpawn() {
+        if(nextSpawn <= 0){
+            nextSpawn += ENEMY_SPAWN;
+            return true;
+        }
+        nextSpawn--;
+        return false;
+    }
 }
