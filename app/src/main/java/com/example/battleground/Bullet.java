@@ -16,6 +16,7 @@ public class Bullet extends GameObject {
     protected int color;
     private Player player;
 
+
     public Bullet(Context context, Player player) {
         super(player.getPosX(), player.getPosY(), 15);
 
@@ -32,8 +33,8 @@ public class Bullet extends GameObject {
     }
 
     @Override
-    public void draw(Canvas canvas) {
-        canvas.drawBitmap(bitmap, (float) posX, (float) posY, paint);
+    public void draw(Canvas canvas, GameDisplay gameDisplay) {
+        canvas.drawBitmap(bitmap, (float)gameDisplay.getCordX(posX), (float)gameDisplay.getCordY(posY), paint);
     }
 
     public void update() {

@@ -5,7 +5,7 @@ import com.example.battleground.Objects.GameObject;
 public class GameDisplay {
     private int width;
     private int height;
-    private GameObject player;
+    private GameObject gameObject;
     private double dispCenterX;
     private double dispCenterY;
     private double offsetX;
@@ -13,10 +13,10 @@ public class GameDisplay {
     private double gameCenterX;
     private double gameCenterY;
 
-    public GameDisplay(int width, int height, GameObject player){
+    public GameDisplay(int width, int height, GameObject gameObject){
         this.width = width;
         this.height = height;
-        this.player = player;
+        this.gameObject = gameObject;
 
         dispCenterX = width / 2.0;
         dispCenterY = height / 2.0;
@@ -25,8 +25,8 @@ public class GameDisplay {
     }
 
     public void update(){
-        gameCenterX = player.getPosX();
-        gameCenterY = player.getPosY();
+        gameCenterX = gameObject.getPosX();
+        gameCenterY = gameObject.getPosY();
 
         offsetX = dispCenterX - gameCenterX;
         offsetY = dispCenterY - gameCenterY;

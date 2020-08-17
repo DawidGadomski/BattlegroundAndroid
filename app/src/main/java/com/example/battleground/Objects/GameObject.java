@@ -6,6 +6,9 @@ import android.graphics.Matrix;
 
 import androidx.core.graphics.drawable.WrappedDrawable;
 
+import com.example.battleground.Game;
+import com.example.battleground.GameDisplay;
+
 public abstract class GameObject {
     protected double posX;
     protected double posY;
@@ -49,7 +52,7 @@ public abstract class GameObject {
         return false;
     }
 
-    public abstract void draw(Canvas canvas);
+    public abstract void draw(Canvas canvas, GameDisplay gameDisplay);
 
     public abstract void update();
 

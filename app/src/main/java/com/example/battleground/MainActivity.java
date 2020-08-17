@@ -12,6 +12,7 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private TextView tvPlay;
     private TextView tvHighscore;
+    private int highscore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,10 +28,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, GameActivity.class));
+                finish();
             }
         });
         sharedPreferences = getSharedPreferences("game", MODE_PRIVATE);
-        tvHighscore.setText("HighScore: " + sharedPreferences.getInt("highscore", 0));
+        highscore = sharedPreferences.getInt("highscore", MODE_PRIVATE);
+        tvHighscore.setText("HighScore: " + highscore);
 
     }
 }

@@ -10,27 +10,36 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class GameOver extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
-    private TextView tvPlay;
-    private TextView tvHighscore;
+    private TextView tvTap;
+    private TextView tvScore;
+
+    private int score;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 
-        setContentView(R.layout.activity_game_start);
+        setContentView(R.layout.activity_game_over);
 
-        tvPlay = findViewById(R.id.tvPlay);
-        tvHighscore = findViewById(R.id.tvHighscore);
+        tvTap = findViewById(R.id.tvTap);
+        tvScore = findViewById(R.id.tvScore);
 
-        tvPlay.setOnClickListener(new View.OnClickListener() {
+        if(getIntent().hasExtra("score")){
+            score = getIntent().getExtras().getInt("score");
+        }
+
+
+        tvScore.setText("Your score: " + score);
+
+        tvTap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, GameActivity.class));
+                startActivity(new Intent(GameOver.this, MainActivity.class));
+                finish();
             }
         });
-        sharedPreferences = getSharedPreferences("game", MODE_PRIVATE);
-        tvHighscore.setText("HighScore: " + sharedPreferences.getInt("highscore", 0));
+
 
     }
 }

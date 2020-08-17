@@ -1,11 +1,14 @@
 package com.example.battleground.Objects;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 
 import androidx.core.content.ContextCompat;
 
+import com.example.battleground.GameDisplay;
 import com.example.battleground.GameLoop;
 import com.example.battleground.R;
 
@@ -33,6 +36,10 @@ public class Enemy extends GameBeing{
 
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable
         .zombie);
+
+        matrix = new Matrix();
+        matrix.setRotate((float)angle, (float)bitmap.getWidth()/2, (float)bitmap.getHeight()/2);
+        rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
     public Enemy(Context context, Player player) {
@@ -51,6 +58,10 @@ public class Enemy extends GameBeing{
         deadBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable
                 .splat_green);
 
+        matrix = new Matrix();
+        matrix.setRotate((float)angle, (float)bitmap.getWidth()/2, (float)bitmap.getHeight()/2);
+        rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
     }
 
     public static boolean isSpawn() {
@@ -63,11 +74,14 @@ public class Enemy extends GameBeing{
         return false;
     }
 
-    public void draw(Canvas canvas){
-        super.draw(canvas);
-        canvas.drawBitmap(bitmap, (float)posX, (float)posY, paint);
-        healthBar.draw(canvas);
+
+
+    public void draw(Canvas canvas, GameDisplay gameDisplay){
+        super.draw(canvas, gameDisplay);
+        canvas.drawBitmap(rotatedBitmap, (float)gameDisplay.getCordX(posX), (float)gameDisplay.getCordY(posY), paint);
+        healthBar.draw(canvas, gameDisplay);
     }
+
 
     @Override
     public void update() {
@@ -78,6 +92,10 @@ public class Enemy extends GameBeing{
 
         double directX = distToPlayerX/distToPlayer;
         double directY = distToPlayerY/distToPlayer;
+
+        angle = Math.atan2(directY, directX) * (180/Math.PI);
+        matrix.setRotate((float)angle, (float)bitmap.getWidth()/2, (float)bitmap.getHeight()/2);
+        rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
 
         if(distToPlayer > 0) {
             velX = directX*MAX_SPEED;

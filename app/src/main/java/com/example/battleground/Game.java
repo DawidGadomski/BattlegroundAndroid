@@ -2,12 +2,15 @@ package com.example.battleground;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -20,6 +23,8 @@ import com.example.battleground.Objects.Player;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private Joystick joystick;
@@ -35,6 +40,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private int joystickPointerID = 0;
     private int cooldown = 0;
     private Background background;
+    private SharedPreferences pref;
+    private SharedPreferences.Editor editor;
+    private int highscore;
 
 
     public Game(Context context){
@@ -58,6 +66,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         displayMetrics = new DisplayMetrics();
         ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         gameDisplay = new GameDisplay(displayMetrics.widthPixels, displayMetrics.heightPixels, player);
+
+        pref = getContext().getSharedPreferences("game", MODE_PRIVATE);
+        editor = pref.edit();
 
         setFocusable(true);
     }
@@ -85,24 +96,31 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
+        if(player.getHealth() <= 0){
+            gameLoop.setIsOver(true);
+            gameLoop.setIsRunning(false);
+            if(pref.getInt("highscore", -1) < player.getScore()){
+                editor.putInt("highscore",player.getScore());
+                editor.commit();
+            }
+            return;
+        }
+
         canvas.translate((float)-player.getPosX(), (float)-player.getPosY());
         background.draw(canvas);
-
+//
         canvas.translate((float) player.getPosX(), (float) player.getPosY());
         drawUPS(canvas);
         drawFPS(canvas);
-        player.draw(canvas);
+        player.draw(canvas, gameDisplay);
         joystick.draw(canvas);
         for(Enemy e : enemyList){
-            e.draw(canvas);
+            e.draw(canvas, gameDisplay);
         }
         for(Bullet b : bulletsList){
-            b.draw(canvas);
+            b.draw(canvas, gameDisplay);
         }
 
-        if(player.getHealth() <= 0){
-
-        }
     }
 
     public void drawUPS(Canvas canvas){
@@ -128,17 +146,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
-        if(player.getHealth() <= 0){
-            return;
-        }
-
         joystick.update();
         player.update();
         if(Enemy.isSpawn()){
             enemyList.add(new Enemy(getContext(), player));
         }
-
-
 
         for(Enemy e : enemyList){
             e.update();
@@ -157,20 +169,23 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             if(GameObject.isColide(enemy, player)){
                 enemyIterator.remove();
                 player.takeDMG(enemy.getDMG());
+                player.getPoints();
                 continue;
             }
+
             Iterator<Bullet> bulletIterator = bulletsList.iterator();
             while(bulletIterator.hasNext()){
                 if(GameObject.isColide(bulletIterator.next(), enemy)){
                     bulletIterator.remove();
                     enemyIterator.remove();
+                    player.getPoints();
                     break;
 
                 }
             }
         }
 
-//        gameDisplay.update();
+        gameDisplay.update();
     }
 
     @Override
@@ -206,5 +221,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
 
         return super.onTouchEvent(event);
+    }
+
+    public int getScore(){
+        return player.getScore();
     }
 }

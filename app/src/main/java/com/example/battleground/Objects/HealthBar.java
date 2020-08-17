@@ -6,6 +6,7 @@ import android.graphics.Paint;
 
 import androidx.core.content.ContextCompat;
 
+import com.example.battleground.GameDisplay;
 import com.example.battleground.R;
 
 public class HealthBar {
@@ -37,7 +38,7 @@ public class HealthBar {
 
     }
 
-    public void draw(Canvas canvas) {
+    public void draw(Canvas canvas, GameDisplay gameDisplay) {
         float x = (float) gameBeing.getPosX();
         float y = (float) gameBeing.getPosY();
         float dist = 30;
@@ -59,8 +60,8 @@ public class HealthBar {
         bottomHealthBorder = bottomBorder - margin;
         topHealthBorder = bottomHealthBorder - healthHeight;
 
-        canvas.drawRect(leftBorder, topBorder, rightBorder, bottomBorder, borderPaint);
+        canvas.drawRect((float)gameDisplay.getCordX(leftBorder), (float)gameDisplay.getCordY(topBorder), (float)gameDisplay.getCordX(rightBorder), (float)gameDisplay.getCordY(bottomBorder), borderPaint);
 
-        canvas.drawRect(leftHealthBorder,topHealthBorder, rightHealthBorder, bottomHealthBorder, healthPaint);
+        canvas.drawRect((float)gameDisplay.getCordX(leftHealthBorder),(float)gameDisplay.getCordY(topHealthBorder), (float)gameDisplay.getCordX(rightHealthBorder), (float)gameDisplay.getCordY(bottomHealthBorder), healthPaint);
     }
 }
