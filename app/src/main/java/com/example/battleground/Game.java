@@ -8,6 +8,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.SoundPool;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -48,6 +52,13 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private Paint fogPaint;
     private int fogColor;
 
+    private AudioAttributes audioAttributes;
+    private SoundPool soundPool;
+    private int shootSound;
+    private int zombieSound;
+    private int takeDMGSound;
+    private int startSound;
+    private int splatSound;
 
 
     public Game(Context context){
@@ -78,6 +89,26 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         fogPaint = new Paint();
         fogColor = ContextCompat.getColor(context, R.color.fogColor);
         fogPaint.setColor(fogColor);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            audioAttributes = new AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setUsage(AudioAttributes.USAGE_GAME)
+                    .build();
+
+            soundPool = new SoundPool.Builder()
+                    .setAudioAttributes(audioAttributes)
+                    .build();
+
+        } else
+            soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+
+        shootSound = soundPool.load(getContext(), R.raw.pistol, 1);
+        zombieSound = soundPool.load(getContext(), R.raw.zombie, 1);
+        takeDMGSound = soundPool.load(getContext(), R.raw.take_dmg, 1);
+        startSound = soundPool.load(getContext(), R.raw.level_start, 1);
+        splatSound = soundPool.load(getContext(), R.raw.splat, 1);
 
 
 
@@ -163,6 +194,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         joystick.update();
         player.update(displayMetrics.widthPixels, displayMetrics.heightPixels);
         if(Enemy.isSpawn()){
+            soundPool.play(zombieSound, 1, 1, 0, 0, 1);
             enemyList.add(new Enemy(getContext(), player));
         }
 
@@ -171,6 +203,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         while (cooldown > 0){
+            soundPool.play(shootSound, 1, 1, 0, 0, 1);
             bulletsList.add(new Bullet(getContext(), player));
             cooldown --;
         }
@@ -182,6 +215,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             GameBeing enemy = enemyIterator.next();
             if(GameObject.isColide(enemy, player)){
                 enemyIterator.remove();
+                soundPool.play(takeDMGSound, 1, 1, 0, 0, 1);
                 player.takeDMG(enemy.getDMG());
                 player.getPoints();
                 continue;
@@ -192,6 +226,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                 if(GameObject.isColide(bulletIterator.next(), enemy)){
                     bulletIterator.remove();
                     enemyIterator.remove();
+                    soundPool.play(splatSound, 1, 1, 0, 0, 1);
                     player.getPoints();
                     break;
 
