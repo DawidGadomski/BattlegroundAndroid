@@ -33,10 +33,17 @@ public class GameDisplay {
     }
 
     public double getCordX(double x){
+//        if(x < 0){
+//            return 0;
+//        }
+
         return x +offsetX;
     }
 
     public double getCordY(double y){
+//        if(y<0){
+//            return 0;
+//        }
         return y + offsetY;
     }
 }

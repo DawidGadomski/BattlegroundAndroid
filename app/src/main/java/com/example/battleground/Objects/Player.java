@@ -9,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable;
 
 import androidx.core.content.ContextCompat;
 
+import com.example.battleground.Background;
 import com.example.battleground.GameDisplay;
 import com.example.battleground.GameLoop;
 import com.example.battleground.Joystick;
@@ -20,6 +21,9 @@ public class Player extends GameBeing{
 
     private Joystick joystick;
     private HealthBar healthBar;
+    private Background background;
+//    private Bitmap lightBitmap;
+//    private Bitmap scaledLightBitmap;
 
     private int score;
 
@@ -40,20 +44,44 @@ public class Player extends GameBeing{
         matrix = new Matrix();
         matrix.setRotate((float)angle, (float)bitmap.getWidth()/2, (float)bitmap.getHeight()/2);
         rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
+//        lightBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.light_350_med);
+//        scaledLightBitmap = Bitmap.createScaledBitmap(lightBitmap, bitmap.getWidth(), bitmap.getHeight(), true);
+
+        background = new Background(context);
     }
 
     public void draw(Canvas canvas, GameDisplay gameDisplay){
         super.draw(canvas, gameDisplay);
 
         canvas.drawBitmap(rotatedBitmap, (float)gameDisplay.getCordX(posX), (float)gameDisplay.getCordY(posY), null);
+//        canvas.drawBitmap(scaledLightBitmap, (float)gameDisplay.getCordX(posX), (float)gameDisplay.getCordY(posY), null);
         healthBar.draw(canvas, gameDisplay);
+        System.out.println("X: " + posX + " Y: " + posY);
     }
 
-    public void update() {
+    public void update(int dispWidth, int dispHeight) {
         velX = joystick.getActuatorX()*MAX_SPEED;
         velY = joystick.getActuatorY()*MAX_SPEED;
+
         posX += velX;
         posY += velY;
+
+        if(posX < 0){
+            posX = 0;
+        }
+        if(posY < 0){
+            posY = 0;
+        }
+        if(posX> background.getWidth() - dispWidth){
+            posX = background.getWidth()- dispWidth;
+        }
+
+
+        if(posY> background.getHeight() - dispHeight){
+            posY = background.getHeight()- dispHeight;
+        }
+
 
         if(velX != 0 || velY != 0){
             double dist = getDistBetweenPoints(0, 0, velX, velY);
@@ -70,6 +98,8 @@ public class Player extends GameBeing{
             bitmap = deadBitmap;
         }
     }
+
+
 
     public void getPoints(){
         this.score += 10;

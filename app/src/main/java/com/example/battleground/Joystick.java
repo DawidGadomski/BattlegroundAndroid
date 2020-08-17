@@ -99,4 +99,9 @@ public class Joystick {
     public double getActuatorY() {
         return actuatorY;
     }
+
+    public void moveJoystick(int posX, int posY){
+        this.posX = posX;
+        this.posY = posY;
+    }
 }

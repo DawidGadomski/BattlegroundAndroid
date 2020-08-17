@@ -9,10 +9,12 @@
     <color name="textColor">#AA9999</color>
 
 
+    <color name="fogColor">#80000000</color>
+
     <color name="player">#00FF00</color>
     <color name="enemy">#FF0000</color>
-    <color name="joystickColor">#0000FF</color>
-    <color name="boundsColor">#7F7F7F</color>
+    <color name="joystickColor">#CD5C5C5C</color>
+    <color name="boundsColor">#667F7F7F</color>
     <color name="bulletColor">#8A6F28</color>
     <color name="healthBorderColor">#D6CBAE</color>
     <color name="healthColor">#62EC52</color>

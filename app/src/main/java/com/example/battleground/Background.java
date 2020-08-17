@@ -19,4 +19,11 @@ public class Background {
     public void draw(Canvas canvas){
         canvas.drawBitmap(this.bitmap, 0, 0, paint);
     }
+
+    public int getWidth(){
+        return bitmap.getWidth();
+    }
+    public int getHeight(){
+        return bitmap.getHeight();
+    }
 }

@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.DisplayMetrics;
@@ -43,6 +45,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
     private int highscore;
+    private Paint fogPaint;
+    private int fogColor;
+
 
 
     public Game(Context context){
@@ -58,17 +63,23 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         enemyList = new ArrayList<Enemy>();
         bulletsList = new ArrayList<Bullet>();
 
-
-        joystick = new Joystick(getContext(), 300, 300, 40, 70);
-        player = new Player(getContext(), joystick, 150, 300, 20);
-
-
         displayMetrics = new DisplayMetrics();
         ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+        joystick = new Joystick(getContext(), 100, displayMetrics.heightPixels - 100, 20, 50);
+        player = new Player(getContext(), joystick, 150, 300, 20);
+
         gameDisplay = new GameDisplay(displayMetrics.widthPixels, displayMetrics.heightPixels, player);
+
 
         pref = getContext().getSharedPreferences("game", MODE_PRIVATE);
         editor = pref.edit();
+
+        fogPaint = new Paint();
+        fogColor = ContextCompat.getColor(context, R.color.fogColor);
+        fogPaint.setColor(fogColor);
+
+
 
         setFocusable(true);
     }
@@ -121,6 +132,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             b.draw(canvas, gameDisplay);
         }
 
+        canvas.drawRect(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels, fogPaint);
+
+
     }
 
     public void drawUPS(Canvas canvas){
@@ -147,7 +161,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     public void update() {
         joystick.update();
-        player.update();
+        player.update(displayMetrics.widthPixels, displayMetrics.heightPixels);
         if(Enemy.isSpawn()){
             enemyList.add(new Enemy(getContext(), player));
         }
